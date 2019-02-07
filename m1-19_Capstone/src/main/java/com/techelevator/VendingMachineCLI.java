@@ -1,9 +1,9 @@
 package com.techelevator;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 import com.techelevator.items.Item;
-import com.techelevator.readwrite.FileReader;
 import com.techelevator.readwrite.Inventory;
 import com.techelevator.view.Menu;
 
@@ -20,8 +20,15 @@ public class VendingMachineCLI {
 		this.menu = menu;
 	}
 	
-	public void run() {
+	public void run() throws FileNotFoundException {
 		while(true) {
+			
+			Inventory inventory = new Inventory();
+			Map<String, Item> inventoryMap = inventory.getInventory(); 
+			for (String item : inventoryMap.keySet()) {
+			System.out.println(item + " " + inventoryMap.get(item).getName() + " " + inventoryMap.get(item).getPrice());
+			}
+			
 			String choice = (String)menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 			
 			if(choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
@@ -32,10 +39,11 @@ public class VendingMachineCLI {
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
 		cli.run();
 		
 	}
+		
 }
