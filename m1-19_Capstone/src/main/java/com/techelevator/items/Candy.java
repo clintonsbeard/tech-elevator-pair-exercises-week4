@@ -13,7 +13,7 @@ public class Candy implements Item {
 
 	@Override
 	public String getName() {
-		return "";
+		return name;
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class Candy implements Item {
 
 	@Override
 	public double getPrice() {
-		return 0;
+		return price;
 	}
 
 }
