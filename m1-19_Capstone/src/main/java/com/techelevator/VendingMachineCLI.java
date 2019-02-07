@@ -1,5 +1,10 @@
 package com.techelevator;
 
+import java.util.Map;
+
+import com.techelevator.items.Item;
+import com.techelevator.readwrite.FileReader;
+import com.techelevator.readwrite.Inventory;
 import com.techelevator.view.Menu;
 
 public class VendingMachineCLI {
@@ -31,5 +36,6 @@ public class VendingMachineCLI {
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
 		cli.run();
+		
 	}
 }
