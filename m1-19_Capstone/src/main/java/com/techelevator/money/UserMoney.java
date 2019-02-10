@@ -9,11 +9,17 @@ public class UserMoney {
 	} 
 	
 	public void addMoney(double value) {
-		money += value;
+		if (value >= 0) {
+			money += value;
+		}
+		else {}
 	}
 	
 	public void subtractMoney(double value) {
-		money -= value;
+		if (money >= value) {
+			money -= value;
+		}
+		else {}
 	}
 	
 }

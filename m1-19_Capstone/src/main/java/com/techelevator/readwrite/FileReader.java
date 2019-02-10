@@ -9,14 +9,14 @@ import java.util.Scanner;
 	public class FileReader {
 	
 	String filePath = "vendingmachine.csv";
-	
+	 
 	public List<String> readFile() {
 		
 		List<String> lines = new ArrayList<String>();
 		
 		File inputFile = new File(filePath);
 		try (Scanner fileScanner = new Scanner(inputFile)) {
-			while (fileScanner.hasNextLine()) {
+			while (fileScanner.hasNextLine()) { 
 				lines.add(fileScanner.nextLine());
 			}
 		}

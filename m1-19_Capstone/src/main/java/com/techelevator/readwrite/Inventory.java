@@ -18,10 +18,9 @@ public class Inventory {
 		this.lines = lines;
 	}
 	
-	//Methods: 
 	public Map<String, Item> getInventory() {
 		
-		Map<String, Item> inventory = new TreeMap<String, Item>();
+		Map<String, Item> inventory = new TreeMap<String, Item>(); 
 		for (String key : lines) {
 			String[] parts = key.split("\\|"); 
 			if (parts[3].contains("Chip")) {
@@ -44,4 +43,5 @@ public class Inventory {
 		}
 		return inventory;
 	} 
+	
 }

@@ -9,29 +9,62 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.text.SimpleDateFormat;
 
 import com.techelevator.items.Item;
 import com.techelevator.money.UserMoney;
 import com.techelevator.readwrite.FileReader;
 import com.techelevator.readwrite.Inventory;
+import com.techelevator.readwrite.SalesWriter;
 import com.techelevator.readwrite.Write;
 
 public class Menu {
 
-	private PrintWriter out;
 	private Scanner in;
-	private UserMoney userMoney = new UserMoney();
+	private PrintWriter out;
+	private Write write = new Write();
+	private Coins coinsReturned = new Coins();
 	private FileReader reader = new FileReader();
+	private UserMoney userMoney = new UserMoney();
+	private List<String> messageStrings = new ArrayList<>();
 	private Inventory inventory = new Inventory(reader.readFile());
 	private Map<String, Item> itemInventory = inventory.getInventory();
-	private List<String> messageStrings = new ArrayList<>();
-	private Coins coinsReturned = new Coins();
-	private Write write = new Write();
+	private SalesWriter salesWriter = new SalesWriter();
 
 	public Menu(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output);
 		this.in = new Scanner(input);
+	}
+	
+	public void bannerArt() {
+		System.out.println("|############################################|\n" + 
+						   "|#|                           |##############|\n" + 
+						   "|#|  =====  ..--''`  |~~``|   |##|````````|##|\n" + 
+						   "|#|  |   |  \\     |  :    |   |##| Whole  |##|\n" + 
+						   "|#|  |___|   /___ |  | ___|   |##| Dollar |##|\n" + 
+						   "|#|  /=__\\  ./.__\\   |/,__\\   |##| Only   |##|\n" + 
+						   "|#|  \\__//   \\__//    \\__//   |##|________|##|\n" + 
+						   "|#|===========================|##############|\n" + 
+						   "|#|```````````````````````````|##############|\n" + 
+						   "|#| =.._      +++     //////  |##############|\n" + 
+						   "|#| \\/  \\     | |     \\    \\  |#|`````````|##|\n" + 
+						   "|#|  \\___\\    |_|     /___ /  |#| _______ |##|\n" + 
+						   "|#|  / __\\\\  /|_|\\   // __\\   |#| |1|2|3| |##|\n" + 
+						   "|#|  \\__//-  \\|_//   -\\__//   |#| |4|A|B| |##|\n" + 
+						   "|#|===========================|#| |C|D|$| |##|\n" + 
+						   "|#|```````````````````````````|#| ``````` |##|\n" + 
+						   "|#| ..--    ______   .--._.   |#|[=======]|##|\n" + 
+						   "|#| \\   \\   |    |   |    |   |#|  _   _  |##|\n" + 
+						   "|#|  \\___\\  : ___:   | ___|   |#| ||| ( ) |##|\n" + 
+						   "|#|  / __\\  |/ __\\   // __\\   |#| |||  `  |##|\n" + 
+						   "|#|  \\__//   \\__//  /_\\__//   |#|  ~      |##|\n" + 
+						   "|#|===========================|#|_________|##|\n" + 
+						   "|#|```````````````````````````|##############|\n" + 
+						   "|############################################|\n" + 
+						   "|#|||||||||||||||||||||||||||||####```````###|\n" + 
+						   "|#||||||||||||PUSH|||||||||||||####`     `###|\n" + 
+						   "|#|||||||||||||||||||||||||||||####\\|||||/###|\n" + 
+						   "|############################################|\n" + 
+						   " \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\//////////////////////\n");
 	}
 
 	public Object getChoiceFromOptions(Object[] options) {
@@ -44,7 +77,7 @@ public class Menu {
 	}
 	
 	public void getDisplayItems() {
-		
+		System.out.println();
 		for (String item : itemInventory.keySet()) {
 			if (itemInventory.get(item).getQuantity() < 1) {
 				System.out.printf("%-4s %-20s $%-6.2f %-1s \n", item, itemInventory.get(item).getName(), itemInventory.get(item).getPrice(), "SOLD OUT");
@@ -56,7 +89,7 @@ public class Menu {
 	}
 	
 	public void displaySelectProductMenu() {
-		System.out.println("Please enter the two digit code associated with the desired item: ");
+		System.out.print("\nPlease enter the two digit code associated with the desired item: ");
 		try {
 			String userInput = in.next().toUpperCase();
 			in.nextLine();
@@ -67,6 +100,7 @@ public class Menu {
 			else if (itemInventory.get(userInput).getQuantity() < 1) {
 				System.out.println("Error: Product has sold out.  Please choose another item.");
 			} else {
+				System.out.println("\n" + itemInventory.get(userInput).getName() + " dispensed.  Thank you!");
 				double price = itemInventory.get(userInput).getPrice();
 				userMoney.subtractMoney(price);
 				itemInventory.get(userInput).subtractQuantity();
@@ -83,6 +117,7 @@ public class Menu {
 	}
 
 	public void displayFinishTransactionMenu() {
+		System.out.println();
 		for (String item : messageStrings) {
 			System.out.println(item);
 		}
@@ -108,7 +143,7 @@ public class Menu {
 	}
 	
 	public void displayFeedMoneyMenu() {
-		System.out.println("Please insert whole dollar amount ($1, $2, $5, or $10): ");
+		System.out.print("\nPlease insert whole dollar amount ($1, $2, $5, or $10): ");
 		try {
 			int userInput = in.nextInt();
 			in.nextLine();
@@ -119,13 +154,13 @@ public class Menu {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
+			} 
 			else {
-				System.out.println("Error: Money inserted is not a $1, $2, $5 or a $10.  Please insert correct bill.");
+				System.out.println("\nError: Money inserted is not a $1, $2, $5 or a $10.  Please insert correct bill.");
 			}
 		}
 		catch (InputMismatchException e) {
-			System.out.println("Error: Amount inserted is not whole dollar amount.");
+			System.out.println("\nError: Amount inserted is not whole dollar amount.");
 		}
 	}
 
@@ -141,7 +176,7 @@ public class Menu {
 			// eat the exception, an error message will be displayed below since choice will be null
 		}
 		if(choice == null) {
-			out.println("\n*** "+userInput+" is not a valid option ***\n");
+			out.println("Error: " + userInput + " is not a valid option.");
 		}
 		return choice;
 	}
@@ -152,7 +187,7 @@ public class Menu {
 			int optionNum = i+1;
 			out.println(optionNum+") "+options[i]);
 		}
-		out.print("\nPlease choose an option >>> ");
+		out.print("\nPlease choose an option: ");
 		out.flush();
 	}
 	

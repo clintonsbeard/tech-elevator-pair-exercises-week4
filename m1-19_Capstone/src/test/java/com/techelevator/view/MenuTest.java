@@ -29,7 +29,7 @@ public class MenuTest {
 				 		  "1) "+options[0].toString()+"\n" + 
 						  "2) "+options[1].toString()+"\n" +
 						  "3) "+options[2].toString()+"\n\n" +
-						  "Please choose an option >>> ";
+						  "Please choose an option: ";
 		Assert.assertEquals(expected, output.toString());	  
 	}
 	
@@ -55,10 +55,10 @@ public class MenuTest {
 				 			 "1) "+options[0].toString()+"\n" + 
 						     "2) "+options[1].toString()+"\n" +
 						     "3) "+options[2].toString()+"\n\n" +
-						     "Please choose an option >>> ";
+						     "Please choose an option: ";
 		
 		String expected = menuDisplay + 
-					      "\n*** 4 is not a valid option ***\n\n" +
+					      "Error: 4 is not a valid option.\n" +
 					      menuDisplay;
 		
 		Assert.assertEquals(expected, output.toString());
@@ -75,10 +75,10 @@ public class MenuTest {
 				 			 "1) "+options[0].toString()+"\n" + 
 						     "2) "+options[1].toString()+"\n" +
 						     "3) "+options[2].toString()+"\n\n" +
-						     "Please choose an option >>> ";
+						     "Please choose an option: ";
 		
 		String expected = menuDisplay + 
-					      "\n*** 0 is not a valid option ***\n\n" +
+					      "Error: 0 is not a valid option.\n" +
 					      menuDisplay;
 		
 		Assert.assertEquals(expected, output.toString());
@@ -95,10 +95,10 @@ public class MenuTest {
 							 "1) "+options[0].toString()+"\n" + 
 						     "2) "+options[1].toString()+"\n" +
 						     "3) "+options[2].toString()+"\n\n" +
-						     "Please choose an option >>> ";
+						     "Please choose an option: ";
 		
 		String expected = menuDisplay + 
-					      "\n*** Mickey Mouse is not a valid option ***\n\n" +
+					      "Error: Mickey Mouse is not a valid option.\n" +
 					      menuDisplay;
 		
 		Assert.assertEquals(expected, output.toString());

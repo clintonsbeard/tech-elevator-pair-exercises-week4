@@ -1,10 +1,6 @@
 package com.techelevator;
 
 import java.io.FileNotFoundException;
-import java.util.Map;
-
-import com.techelevator.items.Item;
-import com.techelevator.readwrite.Inventory;
 import com.techelevator.view.Menu;
 
 public class VendingMachineCLI {
@@ -25,7 +21,9 @@ public class VendingMachineCLI {
 	}
 	
 	public void run() throws FileNotFoundException {
+		menu.bannerArt();
 		while(true) {
+		
 			String choice = (String)menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 			
 			if(choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
@@ -35,6 +33,7 @@ public class VendingMachineCLI {
 				
 				while (true) { 
 					menu.displayCurrentMoney();
+					
 					String purchaseChoice = (String)menu.getChoiceFromOptions(PURCHASE_MENU_OPTIONS);
 	
 					if(purchaseChoice.equals(PURCHASE_MENU_FEED_MONEY)) {
@@ -47,7 +46,7 @@ public class VendingMachineCLI {
 						menu.displayFinishTransactionMenu();
 						break;
 					}
-				}
+				} 
 			}
 		}
 	}
@@ -55,7 +54,6 @@ public class VendingMachineCLI {
 	public static void main(String[] args) throws FileNotFoundException {
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
-		
 		cli.run();
 	}
 		

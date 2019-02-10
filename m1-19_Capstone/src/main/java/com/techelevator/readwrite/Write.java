@@ -1,5 +1,6 @@
 package com.techelevator.readwrite;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Write {
+	
+	private boolean file = new File("Log.txt").delete();
 	
 	public void writeFeedMoneyInLog (String transactionDescription, double moneyFed, double totalMoneyProvided) throws IOException {
 	    try (FileWriter auditLog = new FileWriter("Log.txt", true); PrintWriter printWriter = new PrintWriter(auditLog)) {
@@ -18,7 +21,7 @@ public class Write {
 	        printWriter.format(" %-21s +$%-7.2f $%-7.2f", transactionDescription, moneyFed, totalMoneyProvided);
 	        printWriter.println();
 	    }
-	    catch (Exception e) {
+	    catch (Exception e) { 
 	    	return;
 	    }
 	}
