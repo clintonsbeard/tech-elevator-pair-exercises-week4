@@ -1,0 +1,2 @@
+
+java.text.SimpleDateFormat@f930aac1FEED MONEY: 10   15.0

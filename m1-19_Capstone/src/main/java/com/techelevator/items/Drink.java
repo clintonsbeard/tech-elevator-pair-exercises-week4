@@ -2,14 +2,16 @@ package com.techelevator.items;
 
 public class Drink implements Item {
 	
-	private String name;
-	private String message; 
+	private String name; 
 	private double price;
+	private int quantity;
 
-	public Drink(String name, double price) {
+	public Drink(String name, double price,int quantity) {
 		this.name = name;
 		this.price = price;
+		this.quantity = quantity;
 	}
+
 	
 	@Override
 	public String getName() {
@@ -17,7 +19,7 @@ public class Drink implements Item {
 	}
 
 	@Override
-	public String getmessage() {
+	public String getMessage() {
 		return "Glug Glug, Yum!";
 	}
 
@@ -26,4 +28,12 @@ public class Drink implements Item {
 		return price;
 	}
 
+	@Override
+	public int getQuantity() {
+		return quantity;
+	}
+	public int subtractQuantity() {
+		quantity --;
+		return quantity;
+	}
 }

@@ -2,13 +2,14 @@ package com.techelevator.items;
 
 public class Candy implements Item {
 	
-	private String name;
-	private String message; 
+	private String name; 
 	private double price;
+	private int quantity;
 	
-	public Candy(String name, double price) {
+	public Candy(String name, double price,int quantity) {
 		this.name = name;
 		this.price = price;
+		this.quantity = quantity;
 	}
 
 	@Override
@@ -17,7 +18,7 @@ public class Candy implements Item {
 	}
 
 	@Override
-	public String getmessage() {
+	public String getMessage() {
 		return "Munch Munch, Yum!";
 	}
 
@@ -26,4 +27,13 @@ public class Candy implements Item {
 		return price;
 	}
 
+	@Override
+	public int getQuantity() {
+		return quantity;
+	}
+	public int subtractQuantity() {
+		quantity --;
+		return quantity;
+	}
+	
 }
