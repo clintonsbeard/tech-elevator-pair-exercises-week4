@@ -11,8 +11,7 @@ public class VendingMachineCLI {
 
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS,
-													   MAIN_MENU_OPTION_PURCHASE };
+	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE };
 	
 	private Menu menu;
 	
@@ -22,17 +21,16 @@ public class VendingMachineCLI {
 	
 	public void run() throws FileNotFoundException {
 		while(true) {
-			
-			Inventory inventory = new Inventory();
-			Map<String, Item> inventoryMap = inventory.getInventory(); 
-			for (String item : inventoryMap.keySet()) {
-			System.out.println(item + " " + inventoryMap.get(item).getName() + " " + inventoryMap.get(item).getPrice());
-			}
-			
 			String choice = (String)menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 			
 			if(choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
-				// display vending machine items
+				Inventory inventory = new Inventory();
+				Map<String, Item> inventoryMap = inventory.getInventory(); 
+				for (String item : inventoryMap.keySet()) {
+					System.out.printf("%-5s %-21s $%-8.2f %-11s", item, inventoryMap.get(item).getName(), inventoryMap.get(item).getPrice(), "5 Remaining" + 
+							"");
+					System.out.println();
+				}
 			} else if(choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				// do purchase
 			}
