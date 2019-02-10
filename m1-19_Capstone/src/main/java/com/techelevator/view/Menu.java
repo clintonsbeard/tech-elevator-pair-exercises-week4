@@ -1,14 +1,33 @@
 package com.techelevator.view;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+
+import com.techelevator.items.Item;
+import com.techelevator.money.UserMoney;
+import com.techelevator.readwrite.FileReader;
+import com.techelevator.readwrite.Inventory;
+import com.techelevator.readwrite.Write;
 
 public class Menu {
 
 	private PrintWriter out;
 	private Scanner in;
+	private UserMoney userMoney = new UserMoney();
+	private FileReader reader = new FileReader();
+	private Inventory inventory = new Inventory(reader.readFile());
+	private Map<String, Item> itemInventory = inventory.getInventory();
+	private List<String> messageStrings = new ArrayList<>();
+	private Coins coinsReturned = new Coins();
+	private Write write = new Write();
 
 	public Menu(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output);
@@ -22,6 +41,92 @@ public class Menu {
 			choice = getChoiceFromUserInput(options);
 		}
 		return choice;
+	}
+	
+	public void getDisplayItems() {
+		
+		for (String item : itemInventory.keySet()) {
+			if (itemInventory.get(item).getQuantity() < 1) {
+				System.out.printf("%-4s %-20s $%-6.2f %-1s \n", item, itemInventory.get(item).getName(), itemInventory.get(item).getPrice(), "SOLD OUT");
+			}
+			else {
+				System.out.printf("%-4s %-20s $%-6.2f %-1d %-9s \n", item, itemInventory.get(item).getName(), itemInventory.get(item).getPrice(), itemInventory.get(item).getQuantity(), "Remaining");
+			}
+		}
+	}
+	
+	public void displaySelectProductMenu() {
+		System.out.println("Please enter the two digit code associated with the desired item: ");
+		try {
+			String userInput = in.next().toUpperCase();
+			in.nextLine();
+			
+			if (userMoney.getMoney() < itemInventory.get(userInput).getPrice()) {
+				System.out.println("Error: You have not inserted enough money to purchase this item.  Please feed more money into the machine or make a new selection.");
+			}
+			else if (itemInventory.get(userInput).getQuantity() < 1) {
+				System.out.println("Error: Product has sold out.  Please choose another item.");
+			} else {
+				double price = itemInventory.get(userInput).getPrice();
+				userMoney.subtractMoney(price);
+				itemInventory.get(userInput).subtractQuantity();
+				messageStrings.add(itemInventory.get(userInput).getMessage());
+				try {
+					write.writeSelectProductInLog(itemInventory.get(userInput).getName().toUpperCase(), userInput, itemInventory.get(userInput).getPrice(), userMoney.getMoney());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (NullPointerException e) {
+			System.out.println("Error: Invalid product code.");
+		}
+	}
+
+	public void displayFinishTransactionMenu() {
+		for (String item : messageStrings) {
+			System.out.println(item);
+		}
+		
+		messageStrings.removeAll(messageStrings);
+		
+		try {
+			write.writeGiveChangeInLog("GIVE CHANGE", userMoney.getMoney(), 0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (userMoney.getMoney() > 0) {
+			System.out.printf("\nYour total change returned is $%1.2f" + coinsReturned.moneyConverter(userMoney.getMoney()), userMoney.getMoney());
+			userMoney.subtractMoney(userMoney.getMoney());
+		} else {
+			System.out.println("\nNo change returned.  Thank you!");
+		}
+	}
+	
+	public void displayCurrentMoney() {
+		System.out.printf("\nCurrent Money Provided: $%1.2f", userMoney.getMoney());
+	}
+	
+	public void displayFeedMoneyMenu() {
+		System.out.println("Please insert whole dollar amount ($1, $2, $5, or $10): ");
+		try {
+			int userInput = in.nextInt();
+			in.nextLine();
+			if (userInput == 1 || userInput == 2 || userInput == 5 || userInput == 10) {
+				userMoney.addMoney(userInput);
+				try {
+					write.writeFeedMoneyInLog("FEED MONEY", userInput, userMoney.getMoney());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else {
+				System.out.println("Error: Money inserted is not a $1, $2, $5 or a $10.  Please insert correct bill.");
+			}
+		}
+		catch (InputMismatchException e) {
+			System.out.println("Error: Amount inserted is not whole dollar amount.");
+		}
 	}
 
 	private Object getChoiceFromUserInput(Object[] options) {
@@ -50,4 +155,5 @@ public class Menu {
 		out.print("\nPlease choose an option >>> ");
 		out.flush();
 	}
+	
 }

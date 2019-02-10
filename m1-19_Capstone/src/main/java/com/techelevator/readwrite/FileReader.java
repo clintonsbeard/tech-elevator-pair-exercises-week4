@@ -10,7 +10,7 @@ import java.util.Scanner;
 	
 	String filePath = "vendingmachine.csv";
 	
-	public List<String> readFile() throws FileNotFoundException  {
+	public List<String> readFile() {
 		
 		List<String> lines = new ArrayList<String>();
 		
@@ -19,6 +19,9 @@ import java.util.Scanner;
 			while (fileScanner.hasNextLine()) {
 				lines.add(fileScanner.nextLine());
 			}
+		}
+		catch (FileNotFoundException e) {
+			System.out.println("Congratulations!  I didn't even think it was possible to break the program in this manner, but you did it!");
 		}
 		return lines;
 	} 
