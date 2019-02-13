@@ -28,8 +28,7 @@ public class Menu {
 	private List<String> messageStrings = new ArrayList<>();
 	private Inventory inventory = new Inventory(reader.readFile());
 	private Map<String, Item> itemInventory = inventory.getInventory();
-	private SalesWriter salesWriter = new SalesWriter();
-
+	
 	public Menu(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output);
 		this.in = new Scanner(input);
@@ -108,7 +107,7 @@ public class Menu {
 				try {
 					write.writeSelectProductInLog(itemInventory.get(userInput).getName().toUpperCase(), userInput, itemInventory.get(userInput).getPrice(), userMoney.getMoney());
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.out.println("Error: Log was unable to be written to file.");
 				}
 			}
 		} catch (NullPointerException e) {
@@ -127,11 +126,12 @@ public class Menu {
 		try {
 			write.writeGiveChangeInLog("GIVE CHANGE", userMoney.getMoney(), 0);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Error: Log was unable to be written to file.");
 		}
 		
 		if (userMoney.getMoney() > 0) {
-			System.out.printf("\nYour total change returned is $%1.2f" + coinsReturned.moneyConverter(userMoney.getMoney()), userMoney.getMoney());
+			coinsReturned.moneyConverter(userMoney.getMoney());
+			System.out.printf("Your total change is $%1.2f in %s quarters, %s dimes, and %s nickels.  Thank you!\n", userMoney.getMoney(), coinsReturned.getQuarters(), coinsReturned.getDimes(), coinsReturned.getNickels());
 			userMoney.subtractMoney(userMoney.getMoney());
 		} else {
 			System.out.println("\nNo change returned.  Thank you!");
@@ -149,11 +149,7 @@ public class Menu {
 			in.nextLine();
 			if (userInput == 1 || userInput == 2 || userInput == 5 || userInput == 10) {
 				userMoney.addMoney(userInput);
-				try {
-					write.writeFeedMoneyInLog("FEED MONEY", userInput, userMoney.getMoney());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				write.writeFeedMoneyInLog("FEED MONEY", userInput, userMoney.getMoney());
 			} 
 			else {
 				System.out.println("\nError: Money inserted is not a $1, $2, $5 or a $10.  Please insert correct bill.");

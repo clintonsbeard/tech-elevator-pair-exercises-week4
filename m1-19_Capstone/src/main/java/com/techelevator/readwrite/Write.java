@@ -12,7 +12,7 @@ public class Write {
 	
 	private boolean file = new File("Log.txt").delete();
 	
-	public void writeFeedMoneyInLog (String transactionDescription, double moneyFed, double totalMoneyProvided) throws IOException {
+	public void writeFeedMoneyInLog (String transactionDescription, double moneyFed, double totalMoneyProvided) {
 	    try (FileWriter auditLog = new FileWriter("Log.txt", true); PrintWriter printWriter = new PrintWriter(auditLog)) {
 	        Date date = new Date();
 	        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -20,10 +20,10 @@ public class Write {
 	        printWriter.write(dateString);
 	        printWriter.format(" %-21s +$%-7.2f $%-7.2f", transactionDescription, moneyFed, totalMoneyProvided);
 	        printWriter.println();
-	    }
-	    catch (Exception e) { 
-	    	return;
-	    }
+	    } 
+	    catch (IOException e) {
+	    	System.out.println("Error: Log was unable to be written to file.");
+		}
 	}
 	
 	public void writeSelectProductInLog (String productName, String productKey, double moneySpent, double totalMoneyProvided) throws IOException {
@@ -35,9 +35,9 @@ public class Write {
 	        printWriter.format(" %-18s %-2s -$%-7.2f $%-7.2f", productName, productKey, moneySpent, totalMoneyProvided);
 	        printWriter.println();
 	    }
-	    catch (Exception e) {
-	    	return;
-	    }
+	    catch (IOException e) {
+	    	System.out.println("Error: Log was unable to be written to file.");
+		}
 	}
 	
 	public void writeGiveChangeInLog (String transactionDescription, double moneyFed, double totalMoneyProvided) throws IOException {
@@ -49,9 +49,9 @@ public class Write {
 	        printWriter.format(" %-21s -$%-7.2f $%-7.2f", transactionDescription, moneyFed, totalMoneyProvided);
 	        printWriter.println();
 	    }
-	    catch (Exception e) {
-	    	return;
-	    }
+	    catch (IOException e) {
+			System.out.println("Error: Log was unable to be written to file.");
+		}
 	}
 	
 }
